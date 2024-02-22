@@ -34,24 +34,19 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.3'
+          cache-dependency-path: go_web_services/go.sum
+      - name: Install dependencies
+        run: |
+            go get .
+            go get github.com/gorilla/mux@v1.8.1
+            go get github.com/lib/pq@v1.10.9
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.21.3'
-        cache-dependency-path: go_web_services/go.sum
-    - name: Install dependencies
-      run: |
-          go get .
-          go get github.com/gorilla/mux@v1.8.1
-          go get github.com/lib/pq@v1.10.9
+      - name: Build
+        run: go build -v ./...
 
-    - name: Build
-      run: go build -v ./...
-
-    - name: Test
-      run: go test -v ./...
+      - name: Test
+        run: go test -v ./...
