@@ -72,7 +72,7 @@ func TestCreateProduct(t *testing.T) {
 
 	response := executeRequest(req)
 
-	checkResponseCode(t, http.StatusOK, response.Code)
+	checkResponseCode(t, http.StatusCreated, response.Code)
 
 	// getting a map from string to interface
 	var m map[string]interface{}
@@ -133,17 +133,26 @@ func TestUpdateProduct(t *testing.T) {
 	// unmarshalling the response
 	json.Unmarshal(response.Body.Bytes(), &m)
 
+	// Doing a get again
+	req, _ = http.NewRequest("GET", "/product/1", nil)
+	response = executeRequest(req)
+
+	checkResponseCode(t, http.StatusOK, response.Code)
+
+	// getting the new updated values
+	json.Unmarshal(response.Body.Bytes(), &originalProduct)
+
 	// we will do if the update happened as expected
 	if m["id"] != originalProduct["id"] {
-		t.Errorf("Expected id %v", m["id"])
+		t.Errorf("Expected  %v got %v", originalProduct["id"], m["id"])
 	}
 
 	if m["name"] != originalProduct["name"] {
-		t.Errorf("Expected name %v", m["name"])
+		t.Errorf("Expected %v got  %v", originalProduct["name"], m["name"])
 	}
 
-	if m["price"] != originalProduct["name"] {
-		t.Errorf("Expected name %v", m["price"])
+	if m["price"] != originalProduct["price"] {
+		t.Errorf("Expected %v got %v", originalProduct["price"], m["price"])
 	}
 }
 
