@@ -1,5 +1,6 @@
 # go_web_service
-This is a simple go web service with CI/CD and tests
+This is a simple TDD go web service with CI/CD using github actions and adopted from - https://github.com/TomFern/go-mux-api/tree/master
+which uses semaphore for CI which seems to not be free anymore.
 
 [![Go](https://github.com/riaz/go_web_service/actions/workflows/go.yml/badge.svg)](https://github.com/riaz/go_web_service/actions/workflows/go.yml)
 
@@ -7,6 +8,9 @@ This is a simple go web service with CI/CD and tests
 
     docker run -e POSTGRES_HOST_AUTH_METHOD=trust -it -p 5432:5432 -d postgres 
 
+### Running the tests locally 
+    
+    go test -v
 
 ### Trouble shooting if the docker is running
 
