@@ -11,6 +11,25 @@ on:
 
 jobs:
 
+  # Label of the runner job
+  runner-job:
+    # Container must run in Linux based operating system
+    runs-on: ubuntu-latest
+    # Docker hub image that the container-job executes in
+    #container: 
+    services:
+        postgres:
+          image: postgres
+          env:
+            POSTGRES_PASSWORD: postgres
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            - 5432:5432
+
   build:
     runs-on: ubuntu-latest
     steps:
