@@ -21,7 +21,8 @@ jobs:
         postgres:
           image: postgres
           env:
-            POSTGRES_HOST_AUTH_METHOD : "trust"
+            POSTGRES_HOST_AUTH_METHOD : "trust"    
+            POSTGRES_SSL: "off"      
           options: >-
             --health-cmd pg_isready
             --health-interval 10s
