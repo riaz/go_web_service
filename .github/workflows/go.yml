@@ -9,6 +9,8 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# We create two parallel jobs here - one for the linter, and rest for starting the docker and running the tests after the service starts
+# since the tests are dependent on the docker, they cannot be parallelized
 jobs:
   golangci:
     name: lint
