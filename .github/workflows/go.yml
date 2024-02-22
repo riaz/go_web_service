@@ -17,15 +17,19 @@ jobs:
     runs-on: ubuntu-latest
     # Docker hub image that the container-job executes in
     #container: 
+    env:
+      APP_DB_USERNAME : postgres
+      APP_DB_PASSWORD : postgres
+      APP_DB_NAME : postgres
     services:
         postgres:
           image: postgres
           env:
             POSTGRES_HOST_AUTH_METHOD : "trust"    
             POSTGRES_SSL_MODE: "require"
-            POSTGRES_USER : "postgres"
-            POSTGRES_PASSWORD : "postgres"
-            POSTGRES_DB : "postgres"
+            APP_DB_USERNAME : "postgres"
+            APP_DB_PASSWORD : "postgres"
+            APP_DB_NAME : "postgres"
           options: >-
             --health-cmd pg_isready
             --health-interval 10s
@@ -48,6 +52,7 @@ jobs:
             go get .
             go get github.com/gorilla/mux@v1.8.1
             go get github.com/lib/pq@v1.10.9
+
 
       - name: Build
         run: go build -v ./...
