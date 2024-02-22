@@ -11,6 +11,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+
 	_ "github.com/lib/pq"
 )
 
@@ -20,7 +21,7 @@ type App struct {
 }
 
 func (a *App) Initialize(user, password, dbname string) {
-	connectionString := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", user, password, dbname)
+	connectionString := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=prefer", user, password, dbname)
 
 	var err error
 	a.DB, err = sql.Open("postgres", connectionString)

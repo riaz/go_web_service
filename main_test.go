@@ -4,7 +4,6 @@ package main_test
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -18,7 +17,6 @@ import (
 var a main.App
 
 func TestMain(m *testing.M) {
-	fmt.Println("Hello")
 	a.Initialize(
 		os.Getenv("APP_DB_USERNAME"),
 		os.Getenv("APP_DB_PASSWORD"),
