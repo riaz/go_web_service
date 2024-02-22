@@ -24,7 +24,7 @@ jobs:
             POSTGRES_HOST_AUTH_METHOD : "trust"    
             POSTGRES_SSL_MODE: "require"
           options: >-
-            --health-cmd pg_isready
+            --health-cmd pg_isready -d postgres -U postgres
             --health-interval 10s
             --health-timeout 5s
             --health-retries 5
