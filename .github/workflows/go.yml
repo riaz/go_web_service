@@ -26,10 +26,6 @@ jobs:
           image: postgres
           env:
             POSTGRES_HOST_AUTH_METHOD : "trust"    
-            POSTGRES_SSL_MODE: "require"
-            APP_DB_USERNAME : "postgres"
-            APP_DB_PASSWORD : "postgres"
-            APP_DB_NAME : "postgres"
           options: >-
             --health-cmd pg_isready
             --health-interval 10s
