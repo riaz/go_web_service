@@ -4,6 +4,7 @@ package main_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -51,7 +52,12 @@ func TestGetNonExistantProduct(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code) // since the product doesnt exist
 
 	var m map[string]string
-	json.Unmarshal(response.Body.Bytes(), &m)
+
+	err := json.Unmarshal(response.Body.Bytes(), &m)
+
+	if err != nil {
+		displayError(err)
+	}
 
 	if m["error"] != "Product not found" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'Product not found'. Got '%s'", m["error"])
@@ -74,7 +80,11 @@ func TestCreateProduct(t *testing.T) {
 
 	// getting a map from string to interface
 	var m map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &m)
+	err := json.Unmarshal(response.Body.Bytes(), &m)
+
+	if err != nil {
+		displayError(err)
+	}
 
 	if m["name"] != "test product" {
 		t.Errorf("Expected product name to be 'test product'. Got %v", m["name"])
@@ -115,7 +125,15 @@ func TestUpdateProduct(t *testing.T) {
 
 	// next we will unmarshall the response
 	var originalProduct map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &originalProduct)
+
+	// unmarshalling the response
+	var err error
+
+	err = json.Unmarshal(response.Body.Bytes(), &originalProduct)
+
+	if err != nil {
+		displayError(err)
+	}
 
 	// preparing updated fields
 	var jsonStr = []byte(`{"name": "test product - updated name", "price": 11.22}`) // note: the price is still the same
@@ -128,8 +146,11 @@ func TestUpdateProduct(t *testing.T) {
 
 	var m map[string]interface{}
 
-	// unmarshalling the response
-	json.Unmarshal(response.Body.Bytes(), &m)
+	err = json.Unmarshal(response.Body.Bytes(), &m)
+
+	if err != nil {
+		displayError(err)
+	}
 
 	// Doing a get again
 	req, _ = http.NewRequest("GET", "/product/1", nil)
@@ -138,7 +159,11 @@ func TestUpdateProduct(t *testing.T) {
 	checkResponseCode(t, http.StatusOK, response.Code)
 
 	// getting the new updated values
-	json.Unmarshal(response.Body.Bytes(), &originalProduct)
+	err = json.Unmarshal(response.Body.Bytes(), &originalProduct)
+
+	if err != nil {
+		displayError(err)
+	}
 
 	// we will do if the update happened as expected
 	if m["id"] != originalProduct["id"] {
@@ -176,8 +201,15 @@ func addProducts(count int) {
 	if count < 1 {
 		count = 1
 	}
+
+	var err error
 	for i := 0; i < count; i++ {
-		a.DB.Exec("INSERT INTO products(name,price) VALUES ($1, $2)", "Product"+strconv.Itoa(i), (i+1.0)*10)
+		_, err = a.DB.Exec("INSERT INTO products(name,price) VALUES ($1, $2)", "Product"+strconv.Itoa(i), (i+1.0)*10)
+
+		if err != nil {
+			displayError(err)
+		}
+
 	}
 }
 
@@ -188,8 +220,18 @@ func ensureTableExists() {
 }
 
 func clearTable() {
-	a.DB.Exec("DELETE FROM products")
-	a.DB.Exec("ALTER SEQUENCE products_id_seq RESTART WITH 1")
+	_, err := a.DB.Exec("DELETE FROM products")
+
+	if err != nil {
+		displayError(err)
+	}
+
+	_, err = a.DB.Exec("ALTER SEQUENCE products_id_seq RESTART WITH 1")
+
+	if err != nil {
+		displayError(err)
+	}
+
 }
 
 const tableCreationQuery = `CREATE TABLE IF NOT EXISTS products
@@ -211,4 +253,8 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 	if expected != actual {
 		t.Errorf("Expected response code %d got %d", expected, actual)
 	}
+}
+
+func displayError(err error) {
+	fmt.Printf("Encountered an error %v", err.Error())
 }

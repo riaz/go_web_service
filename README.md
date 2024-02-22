@@ -4,6 +4,11 @@ which uses semaphore for CI which seems to not be free anymore.
 
 [![Go](https://github.com/riaz/go_web_service/actions/workflows/go.yml/badge.svg)](https://github.com/riaz/go_web_service/actions/workflows/go.yml)
 
+### Optinal [Linter]
+
+    # In macosx
+    brew install golangci-lint
+    
 ### Running the docker postgres image (without password)
 
     docker run -e POSTGRES_HOST_AUTH_METHOD=trust -it -p 5432:5432 -d postgres 
