@@ -1,6 +1,8 @@
 # go_web_service
 This is a simple go web service with CI/CD and tests
 
+[![Go](https://github.com/riaz/go_web_service/actions/workflows/go.yml/badge.svg)](https://github.com/riaz/go_web_service/actions/workflows/go.yml)
+
 ### Running the docker postgres image (without password)
 
     docker run -e POSTGRES_HOST_AUTH_METHOD=trust -it -p 5432:5432 -d postgres 
